@@ -13,6 +13,6 @@ class ParticipantMailer < ApplicationMailer
     @participant = params[:participant]
     @studies = params[:studies]
 
-    mail(to: @participant.email, subject: 'SSStutterBuddy: Your Weekly Study Digest')
+    mail(to: @participant.email, subject: 'SSStutterBuddy: New studies for you!')
   end
 end
