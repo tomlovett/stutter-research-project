@@ -4,7 +4,7 @@ class UserInvitationMailer < ApplicationMailer
   def invitation_email
     @recipient = params[:recipient]
     @invited_by_name = params[:invited_by_name]
-    @signup_url = Rails.root.join('/signup').to_s
+    @signup_url = url_for(controller: 'users', action: 'new', only_path: false)
 
     mail(
       to: @recipient,
