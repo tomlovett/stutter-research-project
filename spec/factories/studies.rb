@@ -16,7 +16,6 @@ FactoryBot.define do
     follow_up { nil }
     remuneration { rand(25..100) }
     location_type { %w[digital in_person hybrid].sample }
-    last_verified_active { Time.current }
 
     trait :with_follow_up do
       follow_up { Faker::Lorem.sentence }

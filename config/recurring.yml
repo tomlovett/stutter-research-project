@@ -18,10 +18,6 @@ production:
     class: WeeklyOnlineDigestJob
     schedule: at 11:00 am every tuesday
 
-  weekly_stats:
-    class: WeeklyStatsJob
-    schedule: at 9:00 am every sunday
-
   session_cleanup:
     class: SessionCleanupJob
     schedule: at 2:00 am every day
@@ -29,7 +25,3 @@ production:
   nightly_new_researcher:
     class: NightlyNewResearcherJob
     schedule: at 11:00 pm every day
-
-  study_verification:
-    class: StudyVerificationJob
-    schedule: at 1:00 pm every 3 days

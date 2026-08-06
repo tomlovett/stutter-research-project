@@ -87,44 +87,6 @@ RSpec.describe 'R::StudiesController' do
     end
   end
 
-  describe 'GET /r/studies/verify_status' do
-    let(:verify_active_token) do
-      Rails.application.message_verifier('study_verification').generate({ study_id: study.id, action: 'verify_active' })
-    end
-    let(:mark_inactive_token) do
-      Rails.application.message_verifier('study_verification').generate({ study_id: study.id, action: 'mark_inactive' })
-    end
-
-    context 'when confirming the study is still active' do
-      it 'verifies the status of the study successfully' do
-        get "/r/studies/verify_status?token=#{verify_active_token}"
-
-        expect(response).to have_http_status(:success)
-        expect(response.body).to include('r/Studies/verify/VerifyActive')
-      end
-
-      context 'when the study is already closed' do
-        before { study.update!(closed_at: Time.current, published_at: 1.day.ago) }
-
-        it 'returns the already closed page' do
-          get "/r/studies/verify_status?token=#{verify_active_token}"
-
-          expect(response).to have_http_status(:success)
-          expect(response.body).to include('r/Studies/verify/AlreadyClosed')
-        end
-      end
-    end
-
-    context 'when marking the study as inactive' do
-      it 'marks the study as inactive successfully' do
-        get "/r/studies/verify_status?token=#{mark_inactive_token}"
-
-        expect(response).to have_http_status(:success)
-        expect(response.body).to include('r/Studies/verify/MarkInactive')
-      end
-    end
-  end
-
   describe 'POST /r/studies/:id/publish' do
     before do
       study.update!(published_at: nil)

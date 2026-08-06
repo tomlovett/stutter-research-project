@@ -59,8 +59,8 @@ Rails.application.routes.draw do
       end
       collection do
         get 'closed'
-        get 'verify_status', to: 'studies#verify_status'
       end
+
     end
     resources :connections, only: [:update]
     # resources :participants, only: [:show]

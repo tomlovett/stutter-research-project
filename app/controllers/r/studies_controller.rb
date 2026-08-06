@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class R::StudiesController < R::BaseController
-  allow_unauthenticated_access only: %i[verify_status]
-  skip_before_action :redirect_if_not_researcher, only: %i[verify_status]
-  skip_before_action :redirect_if_not_complete, only: %i[verify_status]
   before_action :set_study, only: %i[show edit update publish]
 
   # GET /r/studies
@@ -29,34 +26,6 @@ class R::StudiesController < R::BaseController
   # GET /r/studies/closed
   def closed
     render inertia: 'r/Studies/closed', props: { studies: Current.user.researcher.studies.closed }
-  end
-
-  # GET /r/studies/verify_status?token=...
-  def verify_status
-    payload = verify_token(params[:token])
-    return render_error('Invalid or expired token.') unless payload
-
-    study = Study.find_by(id: payload[:study_id])
-    return render_error('Study not found.') unless study
-
-    action = payload[:action]
-
-    case action
-    when 'verify_active'
-      if study.status == 'closed'
-        return render inertia: 'r/Studies/verify/AlreadyClosed', props: { study: study.as_json }
-      end
-
-      study.update(last_verified_active: Time.current)
-
-      render inertia: 'r/Studies/verify/VerifyActive', props: { study: study.as_json }
-    when 'mark_inactive'
-      study.update(closed_at: Time.current) if study.status != 'closed'
-
-      render inertia: 'r/Studies/verify/MarkInactive', props: { study: study.as_json }
-    else
-      render_error('Invalid action in token.')
-    end
   end
 
   # GET /r/studies/1/edit
@@ -131,18 +100,5 @@ class R::StudiesController < R::BaseController
       :autosend_verified_only,
       location_attributes: %i[id city state country _destroy _delete]
     )
-  end
-
-  def verify_token(token)
-    return nil if token.blank?
-
-    verifier = Rails.application.message_verifier('study_verification')
-    verifier.verify(token)
-  rescue ActiveSupport::MessageVerifier::InvalidSignature, ActiveSupport::MessageVerifier::InvalidMessage
-    nil
-  end
-
-  def render_error(message)
-    render inertia: 'r/Studies/verify/VerifyError', props: { error: message }, status: :unprocessable_entity
   end
 end

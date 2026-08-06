@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_24_163945) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_06_140912) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -261,7 +261,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_163945) do
     t.text "autosend_url"
     t.text "autosend_message"
     t.string "location_type", default: "in_person"
-    t.datetime "last_verified_active", default: -> { "CURRENT_TIMESTAMP" }
     t.string "irb_number"
     t.boolean "autosend_verified_only", default: true, null: false
     t.boolean "survey_only", default: false, null: false
